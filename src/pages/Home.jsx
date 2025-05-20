@@ -1,63 +1,22 @@
+import EvenementsSection from "../components/EvenementsSection";
 import Footer from "../components/Footer";
 
 function HomePage(){
     return (
     <>
-        <section className="h-svh wi-full p-10 relative">
-            <div className="overflow-hidden h-full w-full rounded-[50px]">
-                <img src="/01.webp" alt="Firts" className="h-full w-full object-cover"/>
+        <section className="h-screen w-full p-5 md:p-10 relative">
+            <div className="overflow-hidden h-full w-full rounded-[30px] md:rounded-[50px]">
+                <img src="/01.webp" alt="First" className="h-full w-full object-cover" />
             </div>
-            <div className="w-3xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <h1 className="font-bold text-6xl text-center text-white">Un regard, et mon monde change.</h1>
+
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full px-4 max-w-4xl">
+                <h1 className="font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center text-white drop-shadow-lg">
+                Un regard, et mon monde change.
+                </h1>
             </div>
         </section>
-        <section className=" w-full p-10 relative">
-            <div className="flex flex-col justify-center items-center gap-4 mt-4">
-                <h2 className="text-gray-900 font-bold text-5xl">Evènements et dates</h2>
-                <p className="text-gray-500 text-xl">Je t’aime non seulement pour ce que tu es, mais pour ce que je suis quand nous sommes ensemble.</p>
-            </div>
-            <div className="mt-20 flex gap-4 justify-center flex-wrap">
 
-                <div className="w-96 h-max rounded-2xl p-6 bg-[#F6FAFB]">
-                    <div className="mb-4">
-                        <span className="text-[#CE6D4A]">Date</span>
-                        <h3 className="text-xl font-medium">Calendrier</h3>
-                    </div>
-                    <div className="h-72 w-full overflow-hidden">
-                        <img className="h-full w-full object-contain" src="/photo.jpg" alt="Illustration" />
-                    </div>
-                </div>
-
-                <div className="w-96 h-max rounded-2xl p-6 bg-[#F6FAFB]">
-                    <div className="mb-4">
-                        <span className="text-[#2D8FB9]">Images souvenir</span>
-                        <h3 className="text-xl font-medium">Photos</h3>
-                    </div>
-                    <div className="h-72 w-full overflow-hidden">
-                        <img className="h-full w-full object-contain" src="/photo.jpg" alt="Illustration" />
-                    </div>
-                </div>
-
-                <div className="w-96 rounded-2xl p-6 bg-[#F6FAFB]">
-                    <div className="mb-4">
-                        <span className="text-blue-600">Histoire</span>
-                        <h3 className="text-xl font-medium">Rencontre</h3>
-                    </div>
-                    <p className="text-gray-500">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vero adipisci quia numquam? Nobis consectetur suscipit, sunt fugit odio voluptatem minus pariatur velit error asperiores labore ducimus sint adipisci commodi dignissimos!
-                    </p>
-                </div>
-                <div className="w-96 rounded-2xl p-6 bg-[#F6FAFB]">
-                    <div className="mb-4">
-                        <span className="text-pink-500">Vision</span>
-                        <h3 className="text-xl font-medium">Objectif</h3>
-                    </div>
-                    <p className="text-gray-500">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vero adipisci quia numquam? Nobis consectetur suscipit, sunt fugit odio voluptatem minus pariatur velit error asperiores labore ducimus sint adipisci commodi dignissimos!
-                    </p>
-                </div>
-            </div>  
-        </section>
+        <EvenementsSection/>
         <section className="w-full p-5 md:p-10 relative">
             <div className="flex flex-col justify-center items-center gap-4 mt-4 text-center px-2">
                 <h2 className="text-gray-900 font-bold text-3xl md:text-5xl">Album photo souvenir</h2>
