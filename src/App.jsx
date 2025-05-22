@@ -1,3 +1,4 @@
+import Album from "./pages/Album";
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import { createBrowserRouter, RouterProvider } from "react-router";
@@ -11,6 +12,10 @@ function App(){
     {
       path: "/login",
       element: <LoginPage/>
+    },
+    {
+      path: '/album',
+      element: <Album/>
     }
   ])
   return <RouterProvider router={router}/>
