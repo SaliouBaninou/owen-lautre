@@ -1,9 +1,11 @@
 import EvenementsSection from "../components/EvenementsSection";
 import Footer from "../components/Footer";
+import NavBar from "../components/NavBar";
 
 function HomePage(){
     return (
     <>
+        <NavBar/>
         <section className="h-screen w-full p-5 md:p-10 relative">
             <div className="overflow-hidden h-full w-full rounded-[30px] md:rounded-[50px]">
                 <img src="/01.webp" alt="First" className="h-full w-full object-cover" />
