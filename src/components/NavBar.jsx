@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CrossIcon from "../assets/CrossIcon";
 import BurgerIcon from "../assets/BurgerIcon";
+import { NavLink } from "react-router";
 
 function NavBar() {
     const [isOpen, setOpen] = useState(false);
@@ -29,11 +30,10 @@ function NavBar() {
                 <div>
                     <h2 className="font-medium text-6xl mt-6 mb-6">Menu</h2>
                     <ul>
-                        <li><a className="text-2xl text-gray-500" href="#">Accueil</a></li>
-                        <li><a className="text-2xl text-gray-500" href="#">Album</a></li>
-                        <li><a className="text-2xl text-gray-500" href="#">Modifier</a></li>
-                        <li><a className="text-2xl text-gray-500" href="#">Ajouter</a></li>
-                        <li><a className="text-2xl text-gray-500" href="#">Déconnexion</a></li>
+                        <li><NavLink className="text-2xl text-gray-500" to="/">Accueil</NavLink></li>
+                        <li><NavLink className="text-2xl text-gray-500" to="/album">Album</NavLink></li>
+                        <li><NavLink className="text-2xl text-gray-500" to="/add">Ajouter</NavLink></li>
+                        <li><NavLink className="text-2xl text-gray-500" to="/logout">Déconnexion</NavLink></li>
                     </ul>
                 </div>
             </div>
