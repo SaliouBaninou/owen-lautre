@@ -36,17 +36,17 @@ function AddForm() {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("fileName", file.name);
-    formData.append("publicKey", import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY);
+    formData.append("publicKey", 'public_9658hKDhWiywUPPUxNVkWk3ws/s=');
     formData.append("signature", auth.signature);
     formData.append("expire", auth.expire);
     formData.append("token", auth.token);
 
     const newUpload = {
-      id: crypto.randomUUID(),
-      name: file.name,
-      progress: 0,
-      url: null,
-      type: file.type,
+        id: crypto.randomUUID(),
+        name: file.name,
+        progress: 0,
+        url: null,
+        type: file.type,
     };
     setUploads((prev) => [...prev, newUpload]);
 
