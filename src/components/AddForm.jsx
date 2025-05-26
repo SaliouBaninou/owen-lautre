@@ -1,77 +1,152 @@
 import { useState } from "react";
 import Upload from "../assets/Upload";
+import IconVideo from "../assets/Video";
+import axios from "axios";
 
 function AddForm() {
-    const [dragActive, setDragActive] = useState(false);
-    const [selectedFiles, setSelectedFiles] = useState([]);
+  const [uploads, setUploads] = useState([]);
 
-    const handleChange = (e) => {
-        const files = Array.from(e.target.files);
-        if (files.length > 0) {
-            setSelectedFiles(files);
+  const handleFilesChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+
+    selectedFiles.forEach((file) => {
+      // Validation simple
+      if (
+        !file.type.startsWith("image") &&
+        !file.type.startsWith("video")
+      ) {
+        alert("Seuls les fichiers image ou vidéo sont acceptés.");
+        return;
+      }
+
+      uploadFile(file);
+    });
+  };
+
+  const uploadFile = async (file) => {
+    let auth;
+    try {
+      const authRes = await fetch("http://localhost:3000/api/imagekit/auth");
+      auth = await authRes.json();
+    } catch (err) {
+      console.error("Erreur lors de l'authentification:", err);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("fileName", file.name);
+    formData.append("publicKey", import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY);
+    formData.append("signature", auth.signature);
+    formData.append("expire", auth.expire);
+    formData.append("token", auth.token);
+
+    const newUpload = {
+      id: crypto.randomUUID(),
+      name: file.name,
+      progress: 0,
+      url: null,
+      type: file.type,
+    };
+    setUploads((prev) => [...prev, newUpload]);
+
+    try {
+        const response =await axios.post("https://upload.imagekit.io/api/v1/files/upload", formData, {
+            withCredentials: false,
+            onUploadProgress: (progressEvent) => {
+                const percent = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+                );
+                setUploads((prev) =>
+                prev.map((u) =>
+                    u.id === newUpload.id ? { ...u, progress: percent } : u
+                )
+                );
+            },
+            });
+
+
+        setUploads((prev) =>
+            prev.map((u) =>
+            u.id === newUpload.id ? { ...u, url: response.data.url } : u
+            )
+        );
+        } catch (err) {
+        console.error("Erreur upload :", err);
         }
     };
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setDragActive(false);
-        const files = Array.from(e.dataTransfer.files);
-        if (files.length > 0) {
-            setSelectedFiles(files);
-        }
-    };
-
-    const handleDragOver = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setDragActive(true);
-    };
-
-    const handleDragLeave = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setDragActive(false);
+    const removeFile = (id) => {
+        setUploads((prev) => prev.filter((u) => u.id !== id));
     };
 
     return (
-        <form action="" className="w-full flex justify-center">
-            <div
-                className={`w-[600px] max-w-11/12 p-10 rounded-4xl border-3 border-dashed m-auto transition-all ${
-                    dragActive ? "border-blue-500 bg-blue-50" : "border-zinc-500"
-                }`}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
+        <div style={{ padding: "2rem" }}>
+        <form>
+            <input
+            type="file"
+            id="upload-file"
+            className="hidden"
+            onChange={handleFilesChange}
+            multiple
+            />
+            <label
+            htmlFor="upload-file"
+            className="border-2 border-dotted border-gray-400 rounded-2xl p-4 flex flex-col gap-5 items-center justify-center h-52 m-auto md:w-[500px] cursor-pointer"
             >
-                <div className="h-full w-full">
-                    <input
-                        type="file"
-                        id="input-upload"
-                        className="hidden"
-                        multiple
-                        onChange={handleChange}
-                    />
-                    <label
-                        htmlFor="input-upload"
-                        className="cursor-pointer w-full h-full flex flex-col justify-center items-center"
-                    >
-                        <Upload />
-                        <p className="text-zinc-500 text-2xl font-medium text-center">
-                            Cliquez pour uploader <br />
-                            Ou glissez-déposez plusieurs fichiers
-                        </p>
-                        {selectedFiles.length > 0 && (
-                            <ul className="mt-4 text-green-600 text-lg font-semibold list-disc">
-                                {selectedFiles.map((file, index) => (
-                                    <li key={index}>{file.name}</li>
-                                ))}
-                            </ul>
-                        )}
-                    </label>
-                </div>
-            </div>
+            <Upload />
+            <h2 className="text-gray-400">
+                Uploader une ou plusieurs images/vidéos
+            </h2>
+            </label>
         </form>
+
+        {/* Liste des fichiers uploadés */}
+        <div className="mt-10 flex flex-col gap-4">
+            {uploads.map((file) => (
+            <div
+                key={file.id}
+                className="flex gap-4 relative w-full items-center"
+            >
+                <div className="h-20 w-20 overflow-hidden rounded-xl bg-gray-100 flex items-center justify-center">
+                {file.url ? (
+                    file.type.startsWith("video") ? (
+                    <IconVideo />
+                    ) : (
+                    <img
+                        src={file.url}
+                        className="h-full w-full object-cover"
+                        alt="aperçu"
+                    />
+                    )
+                ) : (
+                    <span className="text-gray-400 text-sm">Aperçu...</span>
+                )}
+                </div>
+
+                <div className="flex-1">
+                <p className="text-sm font-medium text-gray-600">{file.name}</p>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                    <div
+                    className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${file.progress}%` }}
+                    ></div>
+                </div>
+                <p className="text-xs text-gray-400 mt-1">{file.progress}%</p>
+                </div>
+
+                <button
+                onClick={() => removeFile(file.id)}
+                className="absolute top-0 right-0 flex items-center justify-center h-6 w-6 p-2 rounded-full bg-red-100 text-red-500 hover:bg-red-200"
+                aria-label="Supprimer le fichier"
+                title="Supprimer"
+                >
+                ×
+                </button>
+            </div>
+            ))}
+        </div>
+        </div>
     );
 }
 
