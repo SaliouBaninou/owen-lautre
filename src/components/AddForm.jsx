@@ -26,7 +26,7 @@ function AddForm() {
   const uploadFile = async (file) => {
     let auth;
     try {
-      const authRes = await fetch("http://localhost:3000/api/imagekit/auth");
+      const authRes = await fetch("https://back-owen-lautre.onrender.com/api/imagekit/auth");
       auth = await authRes.json();
     } catch (err) {
       console.error("Erreur lors de l'authentification:", err);
